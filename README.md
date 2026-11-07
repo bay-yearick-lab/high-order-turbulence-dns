@@ -12,7 +12,7 @@
 
 Yong Yi Bay
 
-High-order B-spline direct numerical simulation (DNS) of compressible wall-bounded turbulence, stabilized by a boundary-consistent B-spline stabilization whose strength is selected automatically every time step by generalized cross validation (GCV). The code accompanies Bay et al., Journal of Computational Physics 419 (2020).
+High-order B-spline direct numerical simulation (DNS) of compressible wall-bounded turbulence, stabilized by a boundary-consistent B-spline operator whose strength is selected automatically every time step by generalized cross validation (GCV). The code accompanies Bay et al., Journal of Computational Physics 419 (2020).
 
 ## Overview
 
