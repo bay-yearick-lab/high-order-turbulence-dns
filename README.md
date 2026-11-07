@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/hero.png" alt="high-order-turbulence-dns: Q-criterion vortex cores over near-wall streaks in a compressible turbulent channel, M = 1.5, Re = 3000" width="100%">
+  <img src="assets/channel.gif" alt="Vortex cores over near-wall streaks in a compressible turbulent channel, M = 1.5" width="100%">
 </p>
 
 # high-order-turbulence-dns
