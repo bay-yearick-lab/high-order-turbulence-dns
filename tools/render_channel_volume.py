@@ -36,8 +36,7 @@ from render_channel import list_iters, load  # noqa: E402
 
 DATA_DIR = os.environ.get("CHANNEL_DATA_DIR", "/tmp/claude-1000/phdviz/turb/turbulence-data")
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
-FFMPEG = os.environ.get("FFMPEG", "/home/bay/Desktop/github-staging/.venv/lib/python3.14/"
-                        "site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v9.0.2")
+FFMPEG = os.environ.get("FFMPEG", "ffmpeg")
 BG_HEX = "#0B1626"
 UP = 3              # upsampling factor
 SIGMA = 1.1         # Gaussian smoothing on the fine grid (cells)
