@@ -12,33 +12,33 @@
 
 Yong Yi Bay
 
-High-order B-spline direct numerical simulation (DNS) of compressible wall-bounded turbulence, stabilized by a boundary-consistent B-spline filter whose strength is selected automatically every time step by generalized cross validation (GCV). The code accompanies Bay et al., Journal of Computational Physics 419 (2020).
+High-order B-spline direct numerical simulation (DNS) of compressible wall-bounded turbulence, stabilized by a boundary-consistent B-spline stabilization whose strength is selected automatically every time step by generalized cross validation (GCV). The code accompanies Bay et al., Journal of Computational Physics 419 (2020).
 
 ## Overview
 
-On an under-resolved compressible turbulent channel at Re = 3000, the B-spline filter runs stably to t = 100 while 9 of the 10 compact and optimized finite-difference filters tested diverge between t = 4.1 and t = 14.4. The filter is provably non-amplifying on a bounded domain: its eigenvalues are real and lie in [0, 1] for every filter strength and every penalty, at the wall as well as in the interior. It cuts the error of an under-resolved 2-D Burgers solution 16x (2.53e-1 to 1.57e-2), recovers the reference DNS energy spectrum of the channel on a 60 x 80 x 60 grid, preserves sixth-order convergence of the 3-D compressible Navier-Stokes solver under manufactured solutions, and costs 0.2% to 22% per Runge-Kutta step depending on how the strength is chosen.
+On an under-resolved compressible turbulent channel at Re = 3000, the B-spline stabilization runs stably to t = 100 while 9 of the 10 compact and optimized finite-difference stabilization schemes tested diverge between t = 4.1 and t = 14.4. The stabilization is provably non-amplifying on a bounded domain: its eigenvalues are real and lie in [0, 1] for every stabilization strength and every penalty, at the wall as well as in the interior. It cuts the error of an under-resolved 2-D Burgers solution 16x (2.53e-1 to 1.57e-2), recovers the reference DNS energy spectrum of the channel on a 60 x 80 x 60 grid, preserves sixth-order convergence of the 3-D compressible Navier-Stokes solver under manufactured solutions, and costs 0.2% to 22% per Runge-Kutta step depending on how the strength is chosen.
 
-The filter strength is a data-driven solver control. Minimizing the GCV function balances how much the filter changes the solution against how many degrees of freedom it removes, so the filter switches on where aliasing builds up and stays off where the field is resolved, with no tuned threshold. Scalar strengths are optimized by Newton's method with closed-form gradients and Hessians from a pre-computed eigen-decomposition; a vector strength (one value per wall-normal basis function) uses an analytic gradient and a warm-started, cubically convergent iterative inverse that reaches round-off in two iterations per step.
+The stabilization strength is a data-driven solver control. Minimizing the GCV function balances how much the stabilization changes the solution against how many degrees of freedom it removes, so the stabilization switches on where aliasing builds up and stays off where the field is resolved, with no tuned threshold. Scalar strengths are optimized by Newton's method with closed-form gradients and Hessians from a pre-computed eigen-decomposition; a vector strength (one value per wall-normal basis function) uses an analytic gradient and a warm-started, cubically convergent iterative inverse that reaches round-off in two iterations per step.
 
-The repository holds the Fortran 90 channel solver used for the paper's turbulence runs, a tested Python reference implementation of the filter, the GCV optimizer and the stability analysis, the original Python research scripts, and the data and scripts behind every figure here.
+The repository holds the Fortran 90 channel solver used for the paper's turbulence runs, a tested Python reference implementation of the stabilization, the GCV optimizer and the stability analysis, the original Python research scripts, and the data and scripts behind every figure here.
 
 ## Results
 
 | Test | Result |
 | --- | --- |
-| Robustness, compressible channel, M = 1.5, Re = 3000, t in [0, 100] | B-spline filter stable at every strength. 9 of 10 finite-difference filters diverge: compact with 4th/6th/8th-order boundary closures at t = 11.43 / 10.28 / 8.11, optimized 9/11/13-point filters (two closures each) at t = 4.13 to 14.37. Only the 2nd-order centered compact closure survives |
-| Linear stability on a bounded grid | B-spline filter eigenvalues real, in [0, 1]. Compact closures: max \|eig\| = 1.000426 (8th order), 1.000213 (6th), 1.000074 (4th), with imaginary parts up to 0.16. Optimized closures: max \|eig\| up to 1.005975, all with complex eigenvalues |
-| Accuracy, 2-D Burgers, 20 x 20, degree 7, t = 1 | L∞ error 2.53e-1 unfiltered, 2.07e-2 optimized scalar, 1.57e-2 optimized vector: 16x lower |
-| Spectral fidelity, turbulent channel, 60 x 80 x 60 | optimized vector filter matches the reference DNS (120 x 180 x 120) streamwise spectrum to the grid cutoff; unfiltered and constant-strength runs show an aliasing pile-up |
-| Order of accuracy, 3-D compressible Navier-Stokes, manufactured solutions | degree-7 B-splines with the filter active: observed order 6.02 to 6.09 on all five variables between 160³ and 180³ (formal order 6) |
+| Robustness, compressible channel, M = 1.5, Re = 3000, t in [0, 100] | B-spline stabilization stable at every strength. 9 of 10 finite-difference stabilization schemes diverge: compact with 4th/6th/8th-order boundary closures at t = 11.43 / 10.28 / 8.11, optimized 9/11/13-point stabilization schemes (two closures each) at t = 4.13 to 14.37. Only the 2nd-order centered compact closure survives |
+| Linear stability on a bounded grid | B-spline stabilization eigenvalues real, in [0, 1]. Compact closures: max \|eig\| = 1.000426 (8th order), 1.000213 (6th), 1.000074 (4th), with imaginary parts up to 0.16. Optimized closures: max \|eig\| up to 1.005975, all with complex eigenvalues |
+| Accuracy, 2-D Burgers, 20 x 20, degree 7, t = 1 | L∞ error 2.53e-1 unstabilized, 2.07e-2 optimized scalar, 1.57e-2 optimized vector: 16x lower |
+| Spectral fidelity, turbulent channel, 60 x 80 x 60 | optimized vector stabilization matches the reference DNS (120 x 180 x 120) streamwise spectrum to the grid cutoff; unstabilized and constant-strength runs show an aliasing pile-up |
+| Order of accuracy, 3-D compressible Navier-Stokes, manufactured solutions | degree-7 B-splines with the stabilization active: observed order 6.02 to 6.09 on all five variables between 160³ and 180³ (formal order 6) |
 | Cost per Runge-Kutta step, 60 x 80 x 60 | +0.23% constant strength, +8.7% per-step scalar optimization, +21.9% vector optimization |
 | Warm-started cubic inverse (vector strength) | at most 2 iterations to 1e-14 per step in the Burgers runs; `make verify`: mean 2.05 iterations to the round-off floor of a direct inverse |
 | Newton-optimized GCV | 10 Newton iterations on a 20 x 20 field, 13 on a 60 x 80 x 60 field ([benchmarks](benchmarks/results.md)) |
-| Filter consistency, smooth field | ‖Au − u‖∞ converges at order 7 to 10 under refinement at fixed strength: the filter preserves formal order |
+| Stabilization consistency, smooth field | ‖Au − u‖∞ converges at order 7 to 10 under refinement at fixed strength: the stabilization preserves formal order |
 
-<p align="center"><img src="assets/card_robustness.png" alt="Time to divergence for ten finite-difference filters versus the stable B-spline filter" width="90%"></p>
+<p align="center"><img src="assets/card_robustness.png" alt="Time to divergence for ten finite-difference stabilization schemes versus the stable B-spline stabilization" width="90%"></p>
 
-**Figure 1.** Simulated time before floating-point exception for the turbulent channel at Re = 3000 (degree-7 B-splines, 60 x 80 x 60, M = 1.5). The one-sided boundary closures of compact and optimized finite-difference filters have amplifying, complex eigenvalues and the runs blow up within 15 time units. The B-spline filter, whose spectrum is real and bounded by 1, runs to t = 100. At Re = 300 physical viscosity stabilizes every scheme.
+**Figure 1.** Simulated time before floating-point exception for the turbulent channel at Re = 3000 (degree-7 B-splines, 60 x 80 x 60, M = 1.5). The one-sided boundary closures of compact and optimized finite-difference stabilization schemes have amplifying, complex eigenvalues and the runs blow up within 15 time units. The B-spline stabilization, whose spectrum is real and bounded by 1, runs to t = 100. At Re = 300 physical viscosity stabilizes every scheme.
 
 <p align="center"><img src="assets/card_accuracy_cost.png" alt="2-D Burgers error and cost per Runge-Kutta step" width="96%"></p>
 
@@ -46,11 +46,11 @@ The repository holds the Fortran 90 channel solver used for the paper's turbulen
 
 <p align="center"><img src="assets/card_spectra.png" alt="Streamwise energy spectra of the channel flow" width="80%"></p>
 
-**Figure 3.** Streamwise energy spectra at |x₂| = 0.94 for the channel at M = 1.5, Re = 3000 on a 60 x 80 x 60 grid against reference DNS on 120 x 180 x 120. Without filtering, energy piles up at the cutoff. The optimized scalar filter is stabilizing but dissipative; the optimized vector filter adds just enough dissipation to follow the DNS spectrum.
+**Figure 3.** Streamwise energy spectra at |x₂| = 0.94 for the channel at M = 1.5, Re = 3000 on a 60 x 80 x 60 grid against reference DNS on 120 x 180 x 120. Without stabilization, energy piles up at the cutoff. The optimized scalar stabilization is stabilizing but dissipative; the optimized vector stabilization adds just enough dissipation to follow the DNS spectrum.
 
 <p align="center"><img src="assets/card_mms.png" alt="Manufactured-solution convergence of the 3-D compressible solver" width="80%"></p>
 
-**Figure 4.** L∞ errors of the 3-D compressible Navier-Stokes solver under time-dependent manufactured solutions with high-wavenumber content (degree-7 B-splines, 6th-derivative penalty, filter active with optimized strengths). All variables converge at the formal sixth order.
+**Figure 4.** L∞ errors of the 3-D compressible Navier-Stokes solver under time-dependent manufactured solutions with high-wavenumber content (degree-7 B-splines, 6th-derivative penalty, stabilization active with optimized strengths). All variables converge at the formal sixth order.
 
 <p align="center"><img src="assets/channel/channel_panels.png" alt="Vortex cores, near-wall streaks and cross-stream velocity in the channel" width="100%"></p>
 
@@ -62,17 +62,17 @@ The repository holds the Fortran 90 channel solver used for the paper's turbulen
 
 ## Method
 
-**Filter.** A field is represented with N clamped B-splines of degree d, u(x) = Σⱼ Bⱼ(x) αⱼ, collocated at N points, so B is a square banded matrix. The filtered coefficients minimize the misfit plus a penalty on the p-th derivative,
+**Stabilization.** A field is represented with N clamped B-splines of degree d, u(x) = Σⱼ Bⱼ(x) αⱼ, collocated at N points, so B is a square banded matrix. The stabilized coefficients minimize the misfit plus a penalty on the p-th derivative,
 
 $$\hat{\alpha} = \arg\min_\alpha \|u - B\alpha\|_2^2 + \alpha^T \Omega \alpha, \qquad P_{ij} = \int B_i^{(p)} B_j^{(p)}\,dx,$$
 
-with Ω = λ²P (scalar strength) or Ω = LPL, L = diag(λ) (vector strength). The filter operator is
+with Ω = λ²P (scalar strength) or Ω = LPL, L = diag(λ) (vector strength). The stabilization operator is
 
 $$\hat{u} = A u, \qquad A = B\,(B^T B + \Omega)^{-1} B^T .$$
 
-**Boundary consistency and stability.** The same formula applies at every point, wall points included: there are no one-sided closure stencils. For invertible B, A = (I + B⁻ᵀΩB⁻¹)⁻¹ with Ω positive semi-definite, so A is symmetric with eigenvalues 1/(1 + ν), ν ≥ 0, all real and in (0, 1]. The filter is dissipative for any λ, any p and any grid, and dispersion-free. Polynomials of degree below p lie in the null space of P and pass through unchanged, which is why formal order is preserved. In the generalized SVD of (B, B⁽ᵖ⁾) the filter factors are σᵢ² / (σᵢ² + λ²μᵢ²): components with small generalized singular value, the mesh-scale modes, are damped and the rest are kept, giving a sharper high-wavenumber cutoff than compact or explicit filters of the same stencil width.
+**Boundary consistency and stability.** The same formula applies at every point, wall points included: there are no one-sided closure stencils. For invertible B, A = (I + B⁻ᵀΩB⁻¹)⁻¹ with Ω positive semi-definite, so A is symmetric with eigenvalues 1/(1 + ν), ν ≥ 0, all real and in (0, 1]. The stabilization is dissipative for any λ, any p and any grid, and dispersion-free. Polynomials of degree below p lie in the null space of P and pass through unchanged, which is why formal order is preserved. In the generalized SVD of (B, B⁽ᵖ⁾) the stabilization factors are σᵢ² / (σᵢ² + λ²μᵢ²): components with small generalized singular value, the mesh-scale modes, are damped and the rest are kept, giving a sharper high-wavenumber cutoff than compact or explicit stabilization schemes of the same stencil width.
 
-**Banded linear algebra.** BᵀB + Ω has half bandwidth d. It is factored with LAPACK banded LU (DGBTRF) and applied with DGBTRS; for a constant strength the factorization is computed once. In 2-D and 3-D the filter is the Kronecker product A₁ ⊗ A₂ ⊗ A₃ and is applied as 1-D line operators along each direction, never forming the tensor-product matrix. In the Fortran solver the periodic directions use FFT-diagonalized circulant solves and the wall-normal direction uses the banded LU.
+**Banded linear algebra.** BᵀB + Ω has half bandwidth d. It is factored with LAPACK banded LU (DGBTRF) and applied with DGBTRS; for a constant strength the factorization is computed once. In 2-D and 3-D the stabilization is the Kronecker product A₁ ⊗ A₂ ⊗ A₃ and is applied as 1-D line operators along each direction, never forming the tensor-product matrix. In the Fortran solver the periodic directions use FFT-diagonalized circulant solves and the wall-normal direction uses the banded LU.
 
 **GCV-selected strength.** The strength minimizes
 
@@ -86,20 +86,20 @@ $$V_{k+1} = V_k\left(3I - 3QV_k + (QV_k)^2\right), \qquad I - QV_{k+1} = (I - QV
 
 which reaches round-off in two iterations per time step.
 
-**Channel solver.** The Fortran solver integrates the compressible Navier-Stokes equations in skew-symmetric convective form with degree-7 B-spline collocation in all three directions, a wall-clustered tanh mesh in the wall-normal direction, isothermal no-slip walls, a streamwise body force that balances the mean wall shear, and the low-storage third-order Runge-Kutta scheme with mass and momentum conservation enforced each step. Before each step it selects the filter strengths (three scalars, or two scalars plus an 80-entry wall-normal vector) by derivative-free principal-axis minimization and applies the filter.
+**Channel solver.** The Fortran solver integrates the compressible Navier-Stokes equations in skew-symmetric convective form with degree-7 B-spline collocation in all three directions, a wall-clustered tanh mesh in the wall-normal direction, isothermal no-slip walls, a streamwise body force that balances the mean wall shear, and the low-storage third-order Runge-Kutta scheme with mass and momentum conservation enforced each step. Before each step it selects the stabilization strengths (three scalars, or two scalars plus an 80-entry wall-normal vector) by derivative-free principal-axis minimization and applies the stabilization.
 
 ### Where things live
 
 | Component | File |
 | --- | --- |
 | Clamped B-spline basis, collocation points, penalty matrix P | [`python/bspline_filter/basis.py`](python/bspline_filter/basis.py) |
-| Filter A = B(BᵀB + Ω)⁻¹Bᵀ, banded LU (DGBTRF/DGBTRS), Kronecker line operators | [`python/bspline_filter/filter.py`](python/bspline_filter/filter.py) |
+| Stabilization A = B(BᵀB + Ω)⁻¹Bᵀ, banded LU (DGBTRF/DGBTRS), Kronecker line operators | [`python/bspline_filter/filter.py`](python/bspline_filter/filter.py) |
 | GCV objective, closed-form gradient and Hessian, Newton optimizer; vector GCV gradient | [`python/bspline_filter/gcv.py`](python/bspline_filter/gcv.py) |
 | Warm-started cubic iterative inverse | [`python/bspline_filter/inverse.py`](python/bspline_filter/inverse.py) |
-| Eigenvalue analysis, compact-filter boundary closures | [`python/bspline_filter/stability.py`](python/bspline_filter/stability.py) |
+| Eigenvalue analysis, compact-stabilization boundary closures | [`python/bspline_filter/stability.py`](python/bspline_filter/stability.py) |
 | Under-resolved 2-D Burgers test | [`python/bspline_filter/burgers2d.py`](python/bspline_filter/burgers2d.py) |
 | Channel solver: operators, banded LU and FFT circulant solves | [`fortran/col_operator.f90`](fortran/col_operator.f90), [`fortran/col_linalg.f90`](fortran/col_linalg.f90), [`fortran/col_fft.f90`](fortran/col_fft.f90) |
-| Channel solver: per-step filter-strength selection | [`fortran/col_linalg.f90`](fortran/col_linalg.f90) (`GCV`, `vector_GCV`), [`fortran/gcv_objectives.f90`](fortran/gcv_objectives.f90) |
+| Channel solver: per-step stabilization-strength selection | [`fortran/col_linalg.f90`](fortran/col_linalg.f90) (`GCV`, `vector_GCV`), [`fortran/gcv_objectives.f90`](fortran/gcv_objectives.f90) |
 | Channel solver: Runge-Kutta, body force, conservation, MMS source terms | [`fortran/rk.f90`](fortran/rk.f90) |
 | Transfer functions, eigenvalue studies, KdV/Burgers/2-D Navier-Stokes research drivers | [`python/research/`](python/research/) |
 
@@ -164,7 +164,7 @@ make FFTW_INC=/path/to/fftw/include    # builds ./mixc
 ./mixc                                 # reads mix.in, writes snapshots to channel/{rho,u,v,w,T}/
 ```
 
-`mix.in` sets the grid (Nx, Ny, Nz), domain, time step, B-spline degree, Reynolds and Prandtl numbers and mesh stretching. The driver called from `init` in `main.f90` selects the run: `channel_solve` (unfiltered), `GCV_channel_solve` (optimized scalar strengths), `restart_vector_GCV_channel_solve` (optimized vector strength in the wall-normal direction, restarted from a snapshot) or `mms_solve` (manufactured-solution verification). `tools/render_channel.py` renders the channel figures from the solver's Parquet snapshots.
+`mix.in` sets the grid (Nx, Ny, Nz), domain, time step, B-spline degree, Reynolds and Prandtl numbers and mesh stretching. The driver called from `init` in `main.f90` selects the run: `channel_solve` (unstabilized), `GCV_channel_solve` (optimized scalar strengths), `restart_vector_GCV_channel_solve` (optimized vector strength in the wall-normal direction, restarted from a snapshot) or `mms_solve` (manufactured-solution verification). `tools/render_channel.py` renders the channel figures from the solver's Parquet snapshots.
 
 ## Citation
 
