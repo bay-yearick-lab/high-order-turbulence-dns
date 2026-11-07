@@ -1,0 +1,26 @@
+[project]
+name = "bspline-filter"
+version = "1.0.0"
+description = "Boundary-consistent B-spline filtering with GCV-selected strength for high-order turbulence simulation"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Yong Yi Bay" }]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "matplotlib>=3.7", "pillow>=9"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["python"]
+include = ["bspline_filter*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

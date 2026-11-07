@@ -1,0 +1,50 @@
+60  	Nx
+
+80		Ny
+
+60		Nz
+100000		Ntime
+
+6.283185307179586 		Lx
+2.0		Ly
+4.1887902047863905		Lz
+.001		dt
+
+5 		d
+
+10             out_q
+-10             out_prof
+-50              out_vort
+10              out_cfl
+0.05            epsilon
+1200.           Re
+1.              Pr
+
+0.5             Uo
+2               which_ic
+
+-1.	        Wxl
+-10.            Wxr
+1.5             Wy
+1.    		Wz
+0. 6.           sigmax
+
+0  2            which_x_mesh
+20.		xmesh_sig
+2.		xmesh_sigl
+60.		xmesh_A
+0.		xmesh_Al
+
+1		which_y_mesh
+12		ymesh_sig
+30		ymesh_A
+
+0		which_z_mesh
+12		ymesh_sig
+0.		ymesh_A
+
+30.		Xph
+8.		Yph
+10.        	Zph
+
+.t.		periodic
