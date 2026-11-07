@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite doi:10.1016/j.jcp.2020.109680."
+title: "high-order-turbulence-dns"
+authors:
+  - family-names: Bay
+    given-names: Yong Yi
+license: MIT
+repository-code: "https://github.com/bay-yearick-lab/high-order-turbulence-dns"
